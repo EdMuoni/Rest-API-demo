@@ -101,4 +101,29 @@ app.post('/clients', (req, res) => {
     res.status(201).location('localhost:8080/clients/' + newClient.id).send(newClient);
 });
 
+app.patch('/clients/:id', (req, res) => {
+    if (typeof clients[req.params.id - 1] === 'undefined') {
+        return res.status(404).send({error: "Object not found. Check your thingamabob id."});
+    }
+    if (req.body.name) {
+        clients[req.params.id - 1].name = req.body.name;
+    }
+    if (req.body.email) {
+        clients[req.params.id - 1].email = req.body.email;
+    }
+    res.status(200).send(clients[req.params.id - 1]);
+});
+
+app.put('/clients/:id', (req, res) => {
+    if (typeof clients[req.params.id - 1] === 'undefined') {
+        return res.status(404).send({error: "Object not found. Check your clients id."});
+    }
+    if (!req.body.name || !req.body.email) {
+        return res.status(400).send({error: "One or multiple parameters are missing (name, email)"});
+    }
+    clients[req.params.id - 1].name = req.body.name;
+    clients[req.params.id - 1].email = req.body.email;
+    res.status(200).send(clients[req.params.id - 1]);
+})
+
 app.listen(8080, () => {console.log(`API running at http://localhost:8080`)})
